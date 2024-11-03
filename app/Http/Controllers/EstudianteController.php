@@ -1,48 +1,44 @@
 <?php
 
+// app/Http/Controllers/EstudianteController.php
 namespace App\Http\Controllers;
 
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 
 class EstudianteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return Estudiante::all(); // Listar todos los estudiantes
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string',
+            'apellido' => 'required|string',
+            'correo' => 'required|email|unique:estudiantes'
+        ]);
+
+        return Estudiante::create($request->all()); // Crear un nuevo estudiante
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return Estudiante::findOrFail($id); // Mostrar un estudiante específico
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $estudiante = Estudiante::findOrFail($id);
+        $estudiante->update($request->all()); // Actualizar un estudiante
+        return $estudiante;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Estudiante::destroy($id); // Eliminar un estudiante
+        return response()->noContent();
     }
 }

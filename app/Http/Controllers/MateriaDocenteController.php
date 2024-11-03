@@ -1,48 +1,44 @@
 <?php
 
+// app/Http/Controllers/MateriaDocenteController.php
 namespace App\Http\Controllers;
 
+use App\Models\MateriaDocente;
 use Illuminate\Http\Request;
 
 class MateriaDocenteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return MateriaDocente::all(); // Listar todas las asignaciones de materias a docentes
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'materia_id' => 'required|exists:materias,id',
+            'docente_id' => 'required|exists:docentes,id'
+        ]);
+
+        return MateriaDocente::create($request->all()); // Asignar una materia a un docente
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return MateriaDocente::findOrFail($id); // Mostrar una asignación específica
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $materiaDocente = MateriaDocente::findOrFail($id);
+        $materiaDocente->update($request->all()); // Actualizar una asignación
+        return $materiaDocente;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        MateriaDocente::destroy($id); // Eliminar una asignación
+        return response()->noContent();
     }
 }
+

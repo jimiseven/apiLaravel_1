@@ -1,48 +1,44 @@
 <?php
 
+// app/Http/Controllers/DocenteController.php
 namespace App\Http\Controllers;
 
+use App\Models\Docente;
 use Illuminate\Http\Request;
 
 class DocenteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return Docente::all(); // Listar todos los docentes
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string',
+            'apellido' => 'required|string',
+            'correo' => 'required|email|unique:docentes'
+        ]);
+
+        return Docente::create($request->all()); // Crear un nuevo docente
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return Docente::findOrFail($id); // Mostrar un docente específico
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $docente = Docente::findOrFail($id);
+        $docente->update($request->all()); // Actualizar un docente
+        return $docente;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Docente::destroy($id); // Eliminar un docente
+        return response()->noContent();
     }
 }
